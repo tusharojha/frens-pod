@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.1",
+    "@huddle01/huddle01-client": "^0.0.10",
     "@rainbow-me/rainbowkit": "^0.8.0",
     "@types/node": "18.11.9",
     "@types/react": "18.0.25",

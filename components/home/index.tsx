@@ -3,14 +3,29 @@ import { Button, Card, Checkbox, Form, Input, Layout } from 'antd';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useLens } from '../context/lens';
 import { useAccount, useSigner } from 'wagmi';
+import { getHuddleClient } from '@huddle01/huddle01-client';
+import { useEffect, useState } from 'react';
+import { useHuddleClientContext } from '@huddle01/huddle01-client/hooks';
+import { useRootStore, useHuddleStore } from '@huddle01/huddle01-client';
+
 
 const { Header, Footer, Sider, Content } = Layout;
 
 const HomePage = () => {
 
+
   const { client, login, accessToken, getProfile, createPod } = useLens()
   const { data } = useSigner()
   const { address } = useAccount()
+
+  const huddleClient = useHuddleClientContext();
+  const lobbyPeers = useRootStore(state => state.lobbyPeers);
+
+  useEffect(() => {
+    if (huddleClient.getIsRoomJoined()) {
+      huddleClient.allowAllLobbyPeersToJoinRoom();
+    }
+  }, [lobbyPeers])
 
   const onFinish = async (values: any) => {
     console.log(values)
@@ -21,6 +36,15 @@ const HomePage = () => {
       if (accessToken) {
         await getProfile(address!)
         await createPod(values)
+        await huddleClient.join("testing212", // roomId
+          {
+            address: address, //walletAddress
+            ens: "", //ens name
+            wallet: ''
+          }).then(() => {
+            console.log('hi', huddleClient.getIsRoomJoined())
+          });
+        huddleClient.disableWebcam();
       }
     }
   }
