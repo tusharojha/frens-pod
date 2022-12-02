@@ -30,7 +30,21 @@ const HomePage = () => {
   const onFinish = async (values: any) => {
     console.log(values)
     if ((client && address) && !accessToken) {
-      await login(address!, data)
+      const response = await login(address!, data)
+      if (response) {
+        await getProfile(address!)
+        await createPod(values)
+        await huddleClient.join("testing212", // roomId
+          {
+            address: address, //walletAddress
+            ens: "", //ens name
+            wallet: ''
+          }).then(() => {
+            console.log('hi', huddleClient.getIsRoomJoined())
+          });
+        huddleClient.disableWebcam();
+        return;
+      }
     }
     if (address) {
       if (accessToken) {
@@ -91,6 +105,7 @@ const HomePage = () => {
           </Form.Item>
         </Form>
       </Card>
+      { }
     </Content>
   </Layout>
 }

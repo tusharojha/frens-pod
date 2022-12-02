@@ -41,7 +41,7 @@ const useLens = () => {
           'x-access-token': token ? `Bearer ${token}` : '',
         },
       });
-    
+
       return forward(operation);
     });
     const client = new ApolloClient({
@@ -72,7 +72,7 @@ const useLens = () => {
   }
 
   const createPod = async (values: any) => {
-    if(!profileId) return;
+    if (!profileId) return;
     console.log('ds', profileId)
     const podData = await client!.mutate({
       mutation: createPost,
@@ -103,10 +103,11 @@ const useLens = () => {
       console.log({ accessToken })
       setToken(accessToken)
       sessionStorage.setItem('accessToken', accessToken)
+      return true;
     } catch (err) {
       console.log('Error signing in: ', err)
     }
-
+    return false;
   }
 
   return { connect, login, client, accessToken, createProfile, setAuthLink, getProfile, createPod }
